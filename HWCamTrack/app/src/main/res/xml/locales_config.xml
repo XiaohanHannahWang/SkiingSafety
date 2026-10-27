@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  让 Android 13+ 把本 App 的两种语言暴露在系统的"应用语言"设置页里。
+  应用内的语言开关见 MainActivity（AppCompatDelegate.setApplicationLocales）。
+-->
+<locale-config xmlns:android="http://schemas.android.com/apk/res/android">
+    <locale android:name="en" />
+    <locale android:name="zh" />
+</locale-config>

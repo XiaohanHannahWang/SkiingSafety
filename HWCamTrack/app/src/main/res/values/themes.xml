@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.HWCamTrack" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">@color/brand</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">@color/brand_dark</item>
+        <item name="colorSurface">@color/surface_alt</item>
+        <item name="colorOnSurface">@color/on_surface</item>
+        <item name="colorSurfaceVariant">@color/surface_high</item>
+        <item name="colorOnSurfaceVariant">@color/on_surface_muted</item>
+        <item name="android:colorBackground">@color/surface</item>
+        <item name="android:windowBackground">@color/surface</item>
+        <item name="android:statusBarColor">@color/surface_alt</item>
+        <item name="android:navigationBarColor">@color/surface_alt</item>
+        <item name="android:textColorPrimary">@color/on_surface</item>
+        <item name="android:textColorSecondary">@color/on_surface_muted</item>
+    </style>
+
+    <!-- 紧凑按钮：控制条要在一行里放下 3~4 个按钮 -->
+    <style name="Widget.HWCamTrack.Button" parent="Widget.Material3.Button.TonalButton">
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">40dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:letterSpacing">0.02</item>
+    </style>
+
+    <style name="Widget.HWCamTrack.Button.Primary" parent="Widget.Material3.Button">
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">40dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <style name="Text.HWCamTrack.Label" parent="">
+        <item name="android:textColor">@color/on_surface_muted</item>
+        <item name="android:textSize">11sp</item>
+    </style>
+
+    <style name="Text.HWCamTrack.SectionTitle" parent="">
+        <item name="android:textColor">@color/on_surface</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.06</item>
+    </style>
+
+    <!-- 圆角卡片：界面里所有信息块共用 -->
+    <style name="Widget.HWCamTrack.Card" parent="">
+        <item name="android:background">@drawable/bg_card</item>
+        <item name="android:padding">12dp</item>
+    </style>
+
+</resources>

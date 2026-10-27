@@ -1,0 +1,452 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  主界面自上而下分四段：
+
+   1. 标题栏           —— 应用名 + 一句话说明
+   2. 状态卡片         —— 网络 / 连接状态 / 端点信息 / 跟踪统计
+   3. 画面区           —— 视频 + 跟踪框覆盖层 + 告警横幅（占剩余空间，weight=5）
+   4. 门限卡片 + 控制条 —— 面积比门限滑杆、扫描/连接/断开、手动输入/检测设置
+   5. 信息面板         —— 发现结果 / 运行日志 / 告警记录 三个页签
+
+  画面区与信息面板都用 layout_weight 分配剩余高度：屏幕矮的时候两边一起收缩，
+  面板还能整体收起，把空间全让给画面。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/surface"
+    android:orientation="vertical">
+
+    <!-- ============================ 1. 标题栏 ============================ -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/surface_alt"
+        app:subtitle="@string/app_subtitle"
+        app:title="@string/app_name" />
+
+    <!-- ============================ 2. 状态卡片 ============================ -->
+    <LinearLayout
+        android:id="@+id/statusCard"
+        style="@style/Widget.HWCamTrack.Card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="12dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <View
+                android:id="@+id/stateDot"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:background="@drawable/bg_status_dot" />
+
+            <TextView
+                android:id="@+id/tvState"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:textColor="@color/on_surface"
+                android:textSize="13sp"
+                tools:text="播放中" />
+
+            <TextView
+                android:id="@+id/tvNetwork"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:gravity="end"
+                android:maxLines="1"
+                android:textColor="@color/on_surface_muted"
+                android:textSize="11sp"
+                tools:text="WiFi Camera_1234 · 192.168.1.2/24 · 网关 192.168.1.1" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvEndpoint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="@string/endpoint_none"
+            android:textColor="@color/on_surface"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tvStats"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="@color/on_surface_muted"
+            android:textSize="11sp"
+            tools:text="第 128 帧 · 目标 2 · 推理 68 ms · 实测 5.4 fps · 门限 1.50" />
+    </LinearLayout>
+
+    <!-- ============================ 3. 画面区 ============================ -->
+    <FrameLayout
+        android:id="@+id/playerArea"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="12dp"
+        android:layout_weight="5"
+        android:minHeight="150dp">
+
+        <!--
+          画面按视频真实宽高比摆放：AspectRatioFrameLayout 负责缩小到能放下的最大尺寸，
+          跟踪框覆盖层作为它的子 View 直接铺满，于是"视频区域"和"覆盖层坐标系"
+          完全重合，坐标映射不会因为留黑边而偏。
+        -->
+        <com.hwcamtrack.ui.AspectRatioFrameLayout
+            android:id="@+id/aspectFrame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="@color/black">
+
+            <FrameLayout
+                android:id="@+id/playerContainer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <!-- ExoPlayer 与两条自研 MediaCodec 通道都渲染到这里 -->
+                <TextureView
+                    android:id="@+id/videoTexture"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <!-- HTTP MJPEG 走位图，直接贴在纹理之上 -->
+                <ImageView
+                    android:id="@+id/mjpegImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/player_placeholder"
+                    android:scaleType="fitCenter"
+                    android:visibility="gone"
+                    tools:visibility="gone" />
+            </FrameLayout>
+
+            <com.hwcamtrack.ui.TrackingOverlayView
+                android:id="@+id/trackingOverlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </com.hwcamtrack.ui.AspectRatioFrameLayout>
+
+        <TextView
+            android:id="@+id/tvPlaceholder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:text="@string/player_placeholder"
+            android:textColor="@color/on_surface_muted"
+            android:textSize="12sp" />
+
+        <!-- 告警横幅：叠在画面顶部，超门限时出现 -->
+        <LinearLayout
+            android:id="@+id/alarmBanner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:layout_margin="8dp"
+            android:background="@drawable/bg_alarm_banner"
+            android:orientation="horizontal"
+            android:paddingStart="10dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="8dp"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <TextView
+                android:id="@+id/tvAlarmBanner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                tools:text="【告警】ID3 面积增大：面积比 2.13 ≥ 门限 1.50" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <!-- ============================ 4. 门限与控制 ============================ -->
+    <LinearLayout
+        style="@style/Widget.HWCamTrack.Card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="12dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_threshold"
+                android:textColor="@color/on_surface"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tvThreshold"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:textColor="@color/track_alarm"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                tools:text="1.50" />
+        </LinearLayout>
+
+        <SeekBar
+            android:id="@+id/sbThreshold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="400"
+            android:progress="50" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/threshold_hint"
+            android:textColor="@color/on_surface_muted"
+            android:textSize="10sp" />
+
+        <!-- 报警声：主界面上给一个随手就能静音的开关，时长在「检测设置」里调 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/switch_alarm_sound"
+                android:textColor="@color/on_surface"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tvAlarmSound"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:textColor="@color/on_surface_muted"
+                android:textSize="11sp"
+                tools:text="持续 3 秒" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/swAlarmSound"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="12dp"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnScan"
+            style="@style/Widget.HWCamTrack.Button.Primary"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/btn_scan" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnConnect"
+            style="@style/Widget.HWCamTrack.Button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_weight="1"
+            android:text="@string/btn_connect" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnDisconnect"
+            style="@style/Widget.HWCamTrack.Button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_weight="1"
+            android:text="@string/btn_disconnect" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="12dp"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnManual"
+            style="@style/Widget.HWCamTrack.Button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/btn_manual" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSettings"
+            style="@style/Widget.HWCamTrack.Button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_weight="1"
+            android:text="@string/btn_settings" />
+    </LinearLayout>
+
+    <!-- ============================ 5. 信息面板 ============================ -->
+    <LinearLayout
+        android:id="@+id/panelCard"
+        style="@style/Widget.HWCamTrack.Card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:orientation="vertical"
+        android:paddingBottom="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tabResults"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                android:paddingEnd="14dp"
+                android:paddingBottom="4dp"
+                android:text="@string/tab_results"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tabLog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                android:paddingEnd="14dp"
+                android:paddingBottom="4dp"
+                android:text="@string/tab_log"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tabAlarm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                android:paddingEnd="14dp"
+                android:paddingBottom="4dp"
+                android:text="@string/tab_alarm"
+                android:textSize="12sp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/btnPanelToggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="8dp"
+                android:paddingTop="4dp"
+                android:paddingEnd="4dp"
+                android:paddingBottom="4dp"
+                android:text="@string/panel_collapse"
+                android:textColor="@color/brand"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/panelContent"
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:layout_marginTop="4dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvEndpoints"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false" />
+
+            <ScrollView
+                android:id="@+id/logScroll"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tvLog"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="monospace"
+                    android:textColor="@color/on_surface_muted"
+                    android:textSize="10sp" />
+            </ScrollView>
+
+            <ScrollView
+                android:id="@+id/alarmScroll"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tvAlarmLog"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="monospace"
+                    android:textColor="@color/track_alarm"
+                    android:textSize="10sp" />
+            </ScrollView>
+
+            <TextView
+                android:id="@+id/tvPanelEmpty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textColor="@color/on_surface_muted"
+                android:textSize="11sp" />
+        </FrameLayout>
+    </LinearLayout>
+</LinearLayout>

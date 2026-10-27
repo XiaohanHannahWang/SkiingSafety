@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  中文资源。英文为默认回退（values/strings.xml）。
+  两个文件必须声明完全相同的 key，否则回退时会出现中英混排。
+
+  注：诊断日志（「运行日志」页签）统一输出英文技术文本，不随界面语言变化，
+  便于对照问题反馈与日志检索。
+-->
+<resources>
+    <string name="app_name">摄像头人体跟踪告警</string>
+    <string name="app_subtitle">自动发现 · 实时取流 · 人体跟踪</string>
+
+    <!-- 顶部状态 -->
+    <string name="state_idle">未连接</string>
+    <string name="state_scanning">正在扫描</string>
+    <string name="state_connecting">正在连接</string>
+    <string name="state_buffering">缓冲中</string>
+    <string name="state_playing">播放中</string>
+    <string name="state_error">出错</string>
+
+    <string name="net_unknown">网络信息不可用</string>
+    <string name="endpoint_none">未选择摄像头</string>
+
+    <!-- 按钮 -->
+    <string name="btn_scan">自动扫描</string>
+    <string name="btn_stop_scan">停止扫描</string>
+    <string name="btn_connect">连接</string>
+    <string name="btn_disconnect">断开</string>
+    <string name="btn_manual">手动输入</string>
+    <string name="btn_settings">检测设置</string>
+
+    <string name="switch_rtp_tcp">RTP over TCP</string>
+    <string name="switch_software_decode">强制软解</string>
+    <string name="switch_tracking">显示跟踪框</string>
+    <string name="switch_symmetric">对称检测</string>
+
+    <!-- 面积比门限 -->
+    <string name="label_threshold">面积比门限</string>
+    <string name="threshold_hint">同一目标在前后两帧的“框宽×框高”之比达到该值即告警（框变红）。</string>
+
+    <!-- 检测设置对话框 -->
+    <string name="dialog_settings_title">检测设置</string>
+    <string name="label_detector">人体检测器</string>
+    <string name="label_analysis_fps">分析帧率：%1$d fps（实际受推理速度限制）</string>
+    <string name="label_min_area">最小告警框面积：%1$d px²（更小的框不触发告警）</string>
+    <string name="label_alarm_duration">报警声持续时长：%1$d 秒（1~10 秒）</string>
+
+    <!-- 语言 -->
+    <string name="language_label">语言 / Language</string>
+    <string name="language_system">跟随系统 / Follow system</string>
+    <string name="language_zh">中文</string>
+    <string name="language_en">English</string>
+
+    <!-- 检测器 -->
+    <string name="detector_tflite">EfficientDet-Lite0（多人 · 推荐）</string>
+    <string name="detector_pose">ML Kit Pose（单人 · 骨骼）</string>
+
+    <!-- 报警声 -->
+    <string name="switch_alarm_sound">报警声音</string>
+    <string name="alarm_sound_value">持续 %1$d 秒</string>
+    <string name="alarm_sound_off">已关闭</string>
+    <string name="action_test_sound">试听</string>
+    <string name="alarm_sound_volume_zero">提示：系统「闹钟」音量是 0，报警声听不到，请在系统设置里调高。</string>
+
+    <!-- 面板 -->
+    <string name="tab_results">发现结果</string>
+    <string name="tab_log">运行日志</string>
+    <string name="tab_alarm">告警记录</string>
+    <string name="panel_collapse">收起</string>
+    <string name="panel_expand">展开</string>
+    <string name="permission_denied">权限被拒绝：SSID 会显示为“未知”，但网关/网段信息仍可用于自动发现。</string>
+    <string name="results_empty">还没有发现结果，点“自动扫描”。</string>
+    <string name="log_empty">日志为空。</string>
+    <string name="alarm_empty">暂无告警。出现面积比超门限的目标时会记录在这里。</string>
+
+    <!-- 手动输入 -->
+    <string name="dialog_manual_title">手动指定摄像头</string>
+    <string name="hint_host">地址，例如 192.168.1.1</string>
+    <string name="hint_port">端口，例如 554</string>
+    <string name="hint_path">路径，例如 /live（可留空）</string>
+    <string name="hint_protocol">协议</string>
+    <string name="action_ok">确定</string>
+    <string name="action_cancel">取消</string>
+    <string name="action_close">关闭</string>
+    <string name="error_host_required">请填写摄像头地址</string>
+    <string name="error_port_invalid">端口必须是 1~65535</string>
+    <string name="vendor_manual">手动指定</string>
+
+    <!-- 播放信息 -->
+    <string name="info_actual_size">实际 %1$dx%2$d</string>
+    <string name="player_placeholder">连接成功后在这里显示实时画面</string>
+    <string name="toast_scanning">开始扫描，请保持手机已连接摄像头热点</string>
+    <string name="toast_no_wifi">请先在系统设置里把手机连到摄像头的 WiFi 热点</string>
+    <string name="toast_disconnected">已断开</string>
+
+    <!-- 跟踪 / 告警 -->
+    <string name="track_stats">第 %1$d 帧 · 目标 %2$d · 推理 %3$d ms · 实测 %4$.1f fps · 门限 %5$.2f</string>
+    <string name="alarm_banner">【告警】ID%1$d %2$s：面积比 %3$.2f ≥ 门限 %4$.2f</string>
+    <string name="alarm_grow">面积增大</string>
+    <string name="alarm_shrink">面积骤缩</string>
+    <string name="alarm_line">[%1$s] ID%2$d %3$s 面积比 %4$.2f %5$s（%6$.0f → %7$.0f px²）</string>
+
+    <!-- 画面上的跟踪框标签 -->
+    <string name="overlay_label">%1$sID%2$d · 面积比 %3$s%4$s</string>
+    <string name="overlay_label_alarm">【告警】</string>
+    <string name="overlay_label_missed">（未检出）</string>
+
+    <string name="settings_help">说明：\n· 面积比 = 同一跟踪目标“本分析帧框面积 ÷ 上一分析帧框面积”，面积 = 框宽 × 框高。\n· 勾选“对称检测”后取 max/min 作为面积比，面积骤缩同样告警；不勾选则只对面积增大告警。\n· “最小告警框面积”用来滤掉远处小目标的噪声，低于该面积的框不参与告警判定。\n· “报警声持续时长”是每次红色告警响铃的时长；连续来告警时重新计时，不叠加。\n· 报警声走系统的“闹钟”音量（静音、勿扰下也能响），请确认闹钟音量不为 0。\n· “强制软解”只影响自研 RTSP / 裸 H.264 通道（ExoPlayer 自己管理解码器）。\n· 改动取流相关开关后需要重新连接才会生效。</string>
+</resources>

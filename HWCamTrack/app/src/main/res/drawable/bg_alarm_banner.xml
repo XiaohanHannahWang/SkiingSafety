@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 告警横幅背景：半透明红底 + 亮红描边 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/alarm_background" />
+    <corners android:radius="8dp" />
+    <stroke
+        android:width="1dp"
+        android:color="@color/alarm_border" />
+</shape>

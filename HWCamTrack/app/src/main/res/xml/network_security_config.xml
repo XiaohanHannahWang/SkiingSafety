@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  行车记录仪的 RTSP / MJPEG / HTTP-FLV 全是明文协议，没有任何 TLS 可能，
+  因此这里对所有域放开明文流量（minSdk 24 起 android:usesCleartextTraffic
+  在部分 ROM 上会被忽略，用 networkSecurityConfig 才可靠）。
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

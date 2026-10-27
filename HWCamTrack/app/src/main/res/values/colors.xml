@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="brand">#0B79D0</color>
+    <color name="brand_dark">#075E9E</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
+
+    <color name="surface">#FF0E1116</color>
+    <color name="surface_alt">#FF171C23</color>
+    <color name="surface_high">#FF212832</color>
+    <color name="on_surface">#FFE6E9EE</color>
+    <color name="on_surface_muted">#FF98A2B3</color>
+
+    <color name="state_idle">#FF7F8C8D</color>
+    <color name="state_ok">#FF2ECC71</color>
+    <color name="state_busy">#FFF1C40F</color>
+    <color name="state_error">#FFE74C3C</color>
+
+    <!-- 跟踪框：正常黄色 / 告警红色（与 TrackingOverlayView 里的常量保持一致） -->
+    <color name="track_normal">#FFFFD600</color>
+    <color name="track_alarm">#FFFF3B30</color>
+
+    <!-- 告警横幅 -->
+    <color name="alarm_background">#E6B3261E</color>
+    <color name="alarm_border">#FFFF6B60</color>
+
+    <color name="ic_launcher_background">#FF0B79D0</color>
+</resources>

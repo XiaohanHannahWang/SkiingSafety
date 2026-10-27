@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Default (English) strings. Chinese lives in values-zh/strings.xml.
+  Keep both files in sync: they must declare exactly the same keys.
+-->
+<resources>
+    <string name="app_name">Camera Person Tracker</string>
+    <string name="app_subtitle">Auto-discover · Live stream · Person tracking</string>
+
+    <!-- Status bar -->
+    <string name="state_idle">Not connected</string>
+    <string name="state_scanning">Scanning</string>
+    <string name="state_connecting">Connecting</string>
+    <string name="state_buffering">Buffering</string>
+    <string name="state_playing">Playing</string>
+    <string name="state_error">Error</string>
+
+    <string name="net_unknown">Network info unavailable</string>
+    <string name="endpoint_none">No camera selected</string>
+
+    <!-- Buttons -->
+    <string name="btn_scan">Scan</string>
+    <string name="btn_stop_scan">Stop scan</string>
+    <string name="btn_connect">Connect</string>
+    <string name="btn_disconnect">Disconnect</string>
+    <string name="btn_manual">Manual</string>
+    <string name="btn_settings">Settings</string>
+
+    <string name="switch_rtp_tcp">RTP over TCP</string>
+    <string name="switch_software_decode">Software decode</string>
+    <string name="switch_tracking">Show boxes</string>
+    <string name="switch_symmetric">Symmetric</string>
+
+    <!-- Area ratio threshold -->
+    <string name="label_threshold">Area ratio threshold</string>
+    <string name="threshold_hint">A tracking box turns red once its width × height ratio between two consecutive analysed frames reaches this value.</string>
+
+    <!-- Detection settings dialog -->
+    <string name="dialog_settings_title">Detection settings</string>
+    <string name="label_detector">Person detector</string>
+    <string name="label_analysis_fps">Analysis rate: %1$d fps (limited by inference speed)</string>
+    <string name="label_min_area">Minimum alarm box area: %1$d px² (smaller boxes never alarm)</string>
+    <string name="label_alarm_duration">Alarm sound duration: %1$d s (1-10 s)</string>
+
+    <!-- Language -->
+    <string name="language_label">Language</string>
+    <string name="language_system">Follow system</string>
+    <string name="language_zh">中文</string>
+    <string name="language_en">English</string>
+
+    <!-- Detectors -->
+    <string name="detector_tflite">EfficientDet-Lite0 (multi-person, recommended)</string>
+    <string name="detector_pose">ML Kit Pose (single person, skeleton)</string>
+
+    <!-- Alarm sound -->
+    <string name="switch_alarm_sound">Alarm sound</string>
+    <string name="alarm_sound_value">%1$d s</string>
+    <string name="alarm_sound_off">Off</string>
+    <string name="action_test_sound">Test</string>
+    <string name="alarm_sound_volume_zero">Note: the system ALARM volume is 0, so the alarm sound is inaudible. Raise it in the system settings.</string>
+
+    <!-- Panel -->
+    <string name="tab_results">Results</string>
+    <string name="tab_log">Log</string>
+    <string name="tab_alarm">Alarms</string>
+    <string name="panel_collapse">Collapse</string>
+    <string name="panel_expand">Expand</string>
+    <string name="permission_denied">Permission denied: the SSID shows as unknown, but gateway and subnet information is still enough for discovery.</string>
+    <string name="results_empty">No results yet. Tap Scan.</string>
+    <string name="log_empty">Log is empty.</string>
+    <string name="alarm_empty">No alarms yet. Targets exceeding the threshold are listed here.</string>
+
+    <!-- Manual endpoint -->
+    <string name="dialog_manual_title">Specify camera manually</string>
+    <string name="hint_host">Host, e.g. 192.168.1.1</string>
+    <string name="hint_port">Port, e.g. 554</string>
+    <string name="hint_path">Path, e.g. /live (optional)</string>
+    <string name="hint_protocol">Protocol</string>
+    <string name="action_ok">OK</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_close">Close</string>
+    <string name="error_host_required">Enter the camera address</string>
+    <string name="error_port_invalid">Port must be 1-65535</string>
+    <string name="vendor_manual">Manual entry</string>
+
+    <!-- Playback info -->
+    <string name="info_actual_size">actual %1$dx%2$d</string>
+    <string name="player_placeholder">The live view appears here once connected</string>
+    <string name="toast_scanning">Scanning. Keep the phone on the camera hotspot.</string>
+    <string name="toast_no_wifi">Connect the phone to the camera Wi-Fi hotspot first</string>
+    <string name="toast_disconnected">Disconnected</string>
+
+    <!-- Tracking / alarms -->
+    <string name="track_stats">Frame %1$d · targets %2$d · %3$d ms · %4$.1f fps · threshold %5$.2f</string>
+    <string name="alarm_banner">[ALARM] ID%1$d %2$s: ratio %3$.2f ≥ threshold %4$.2f</string>
+    <string name="alarm_grow">grew</string>
+    <string name="alarm_shrink">shrank</string>
+    <string name="alarm_line">[%1$s] ID%2$d %3$s ratio %4$.2f %5$s (%6$.0f → %7$.0f px²)</string>
+
+    <!-- Overlay labels drawn on top of the video -->
+    <string name="overlay_label">%1$sID%2$d · ratio %3$s%4$s</string>
+    <string name="overlay_label_alarm">ALARM </string>
+    <string name="overlay_label_missed"> (missed)</string>
+
+    <string name="settings_help">Notes:\n· Area ratio = box area in this analysed frame ÷ box area in the previous one, where area = width × height.\n· With “Symmetric” enabled the ratio becomes max/min, so a sudden shrink alarms as well; otherwise only growth alarms.\n· “Minimum alarm box area” filters out the noise of small distant targets; smaller boxes never trigger an alarm.\n· “Alarm sound duration” is how long each red alarm rings; a new alarm restarts the timer instead of layering.\n· The alarm sound uses the system ALARM volume (audible even in silent or DND mode), so make sure that volume is not 0.\n· “Software decode” only affects the built-in RTSP / raw H.264 channel (ExoPlayer manages its own decoder).\n· Transport and decode switches take effect on the next connection.</string>
+</resources>
